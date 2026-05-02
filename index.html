@@ -87,7 +87,7 @@ h2{color:#e2b714;margin-bottom:20px}
 <div id="login" class="scr">
 <div class="card" style="max-width:400px;margin:60px auto;text-align:center">
 <h2>🔐 Вход</h2>
-<div class="fg"><input type="password" id="pw" placeholder="Пароль (по умолчанию: admin123)" onkeydown="if(event.key==='Enter')doLogin()"></div>
+<div class="fg"><input type="password" id="pw" placeholder="Пароль" onkeydown="if(event.key==='Enter')doLogin()"></div>
 <button class="btn btn-y" onclick="doLogin()">Войти</button>
 <p id="lerr" style="color:#e74c3c;margin-top:10px"></p>
 <div style="margin-top:20px"><button class="btn btn-b btn-s" onclick="goHome()">← Назад</button></div>
@@ -190,7 +190,7 @@ h2{color:#e2b714;margin-bottom:20px}
 var DEFAULT_Q = [{"text":"Вопрос 1...","options":["А","Б","В","Г"],"correct":0}];
 function getQ(){try{var d=JSON.parse(localStorage.getItem('qz_data'));if(d&&d.length)return d;localStorage.setItem('qz_data',JSON.stringify(DEFAULT_Q));return DEFAULT_Q}catch(e){return DEFAULT_Q}}
 function setQ(d){localStorage.setItem('qz_data',JSON.stringify(d))}
-function getPw(){return localStorage.getItem('qz_pw')||'admin123'}
+function getPw(){return localStorage.getItem('qz_pw')||'severyanin'}
 function show(id){document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('on')});document.getElementById(id).classList.add('on')}
 function goHome(){show('home')}
 function goLogin(){show('login');document.getElementById('pw').value='';document.getElementById('lerr').textContent='';document.getElementById('pw').focus()}
