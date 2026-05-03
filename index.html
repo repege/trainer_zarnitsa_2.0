@@ -187,8 +187,9 @@ h2{color:#e2b714;margin-bottom:20px}
 
 </div>
 <script>
-  <script>
 if(!localStorage.getItem('qz_data')){fetch('questions.json').then(function(r){return r.json()}).then(function(d){if(Array.isArray(d)&&d.length){localStorage.setItem('qz_data',JSON.stringify(d));location.reload()}}).catch(function(){})}
+var DEFAULT_Q = [{"text":"Вопрос 1...","options":["А","Б","В","Г"],"correct":0}];
+  <script>
 var DEFAULT_Q = [{"text":"Вопрос 1...","options":["А","Б","В","Г"],"correct":0}];
 var DEFAULT_Q = [{"text":"Вопрос 1...","options":["А","Б","В","Г"],"correct":0}];
 function getQ(){try{var d=JSON.parse(localStorage.getItem('qz_data'));if(d&&d.length)return d;localStorage.setItem('qz_data',JSON.stringify(DEFAULT_Q));return DEFAULT_Q}catch(e){return DEFAULT_Q}}
