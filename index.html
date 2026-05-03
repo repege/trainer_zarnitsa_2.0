@@ -22,11 +22,8 @@ h2{color:#e2b714;margin-bottom:20px}
 .btn-g{background:#2ecc71;color:#fff}
 .btn-g:hover{background:#27ae60}
 .btn-s{padding:8px 14px;font-size:.85rem}
-.scr{display:none}.scr.on{display:block}
-#home{text-align:center;padding:80px 20px}
-#home p{color:#aaa;font-size:1.1rem;margin-bottom:40px}
-.hb{display:flex;flex-direction:column;gap:15px;max-width:350px;margin:0 auto}
-.hb .btn{padding:18px;font-size:1.1rem;width:100%}
+.scr{display:none}
+.scr.on{display:block}
 .card{background:#16213e;border-radius:12px;padding:25px;margin-bottom:20px}
 .fg{margin-bottom:18px}
 .fg label{display:block;margin-bottom:6px;font-weight:600;color:#ccc}
@@ -45,6 +42,7 @@ h2{color:#e2b714;margin-bottom:20px}
 .qi .acts{display:flex;gap:8px;margin-top:12px}
 .pbar{width:100%;height:6px;background:#16213e;border-radius:3px;margin-bottom:20px;overflow:hidden}
 .pbar .fill{height:100%;background:#e2b714;border-radius:3px;transition:width .4s}
+.cnt{font-size:.85rem;color:#888;margin-bottom:8px}
 .qtext{font-size:1.15rem;line-height:1.6;margin-bottom:16px}
 .qimg{width:100%;max-height:350px;object-fit:contain;border-radius:8px;margin-bottom:16px}
 .qopts{display:flex;flex-direction:column;gap:10px}
@@ -65,10 +63,10 @@ h2{color:#e2b714;margin-bottom:20px}
 .sacts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:10px}
 .nav{display:flex;gap:10px;margin-bottom:25px;flex-wrap:wrap}
 .nav .btn{flex:1;text-align:center;min-width:100px}
-.cnt{font-size:.85rem;color:#888;margin-bottom:8px}
 .narea{display:flex;justify-content:space-between;margin-top:16px}
 .empty{text-align:center;padding:40px;color:#666}
 .iobtns{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.cat{display:inline-block;background:#e2b71433;color:#e2b714;padding:4px 10px;border-radius:5px;font-size:.8rem;margin-bottom:10px}
 @media(max-width:600px){h1{font-size:1.4rem}.sgrid{grid-template-columns:1fr}.nav{flex-direction:column}.narea{flex-direction:column;gap:10px}}
 </style>
 </head>
@@ -77,17 +75,23 @@ h2{color:#e2b714;margin-bottom:20px}
 <h1>🎓 Тренажёр</h1>
 
 <div id="home" class="scr on">
-<p>Подготовься к тестированию!<br>Вопросы идут в случайном порядке.</p>
-<div class="hb">
-<button class="btn btn-y" onclick="goQuizStart()">📝 Пройти тест</button>
-<button class="btn btn-b" onclick="goLogin()">⚙️ Админ-панель</button>
+<div class="card" style="text-align:center;padding:50px 20px">
+<p style="color:#aaa;font-size:1.1rem;margin-bottom:30px">Подготовься к тестированию!<br>Вопросы идут в случайном порядке.</p>
+<p style="color:#aaa;margin-bottom:20px">Вопросов в базе: <strong id="home-total" style="color:#e2b714">0</strong></p>
+<div class="fg" style="max-width:300px;margin:0 auto 20px">
+<input type="text" id="sname" placeholder="Введите ваше имя" maxlength="50">
+</div>
+<button class="btn btn-y" id="gobtn" onclick="beginQuiz()" disabled>📝 Начать тест</button>
+<div style="margin-top:30px">
+<button class="btn btn-b btn-s" onclick="goLogin()">⚙️ Админ-панель</button>
+</div>
 </div>
 </div>
 
 <div id="login" class="scr">
 <div class="card" style="max-width:400px;margin:60px auto;text-align:center">
 <h2>🔐 Вход</h2>
-<div class="fg"><input type="password" id="pw" placeholder="Пароль" onkeydown="if(event.key==='Enter')doLogin()"></div>
+<div class="fg"><input type="password" id="pw" placeholder="Введите пароль" onkeydown="if(event.key==='Enter')doLogin()"></div>
 <button class="btn btn-y" onclick="doLogin()">Войти</button>
 <p id="lerr" style="color:#e74c3c;margin-top:10px"></p>
 <div style="margin-top:20px"><button class="btn btn-b btn-s" onclick="goHome()">← Назад</button></div>
@@ -115,7 +119,7 @@ h2{color:#e2b714;margin-bottom:20px}
 <button type="button" class="btn btn-b btn-s" onclick="addOpt()" style="margin-top:8px">+ Ещё вариант</button></div>
 <div class="fg"><label>Пояснение</label><textarea id="fe" placeholder="Необязательно"></textarea></div>
 <div class="fg"><label>Картинка</label>
-<input type="text" id="fiu" placeholder="Ссылка на картинку (необязательно)" oninput="prevImg()">
+<input type="text" id="fiu" placeholder="Ссылка на картинку" oninput="prevImg()">
 <div style="margin:8px 0;color:#888;font-size:.85rem">— или выберите файл —</div>
 <input type="file" id="fif" accept="image/*" onchange="loadImg()">
 <img id="iprev" style="max-width:300px;max-height:200px;border-radius:8px;margin-top:10px;display:none">
@@ -130,7 +134,7 @@ h2{color:#e2b714;margin-bottom:20px}
 <div id="aio" class="atab" style="display:none">
 <div class="card">
 <h2>💾 Импорт / Экспорт</h2>
-<p style="color:#aaa;margin-bottom:20px">Сохраните вопросы в файл или загрузите из файла. Можно делиться с коллегами!</p>
+<p style="color:#aaa;margin-bottom:20px">Сохраните вопросы в файл или загрузите из файла.</p>
 <div class="iobtns">
 <button class="btn btn-y" onclick="doExport()">📤 Скачать вопросы</button>
 <button class="btn btn-b" onclick="document.getElementById('impf').click()">📥 Загрузить вопросы</button>
@@ -141,22 +145,11 @@ h2{color:#e2b714;margin-bottom:20px}
 </div>
 </div>
 
-<div id="qstart" class="scr">
-<div class="card" style="text-align:center;padding:40px">
-<h2>📝 Тестирование</h2>
-<p style="color:#aaa;margin:20px 0">Вопросов: <strong id="qtot" style="color:#e2b714">0</strong></p>
-<div class="fg" style="max-width:300px;margin:0 auto 20px">
-<input type="text" id="sname" placeholder="Введите ваше имя" maxlength="50">
-</div>
-<button class="btn btn-y" id="gobtn" onclick="beginQuiz()" disabled>Начать</button>
-<div style="margin-top:20px"><button class="btn btn-b btn-s" onclick="goHome()">← Назад</button></div>
-</div>
-</div>
-
 <div id="qplay" class="scr">
 <div class="pbar"><div class="fill" id="pfill"></div></div>
 <div class="cnt" id="qcounter"></div>
 <div class="card">
+<div class="cat" id="qcat" style="display:none"></div>
 <div class="qtext" id="qtxt"></div>
 <img id="qpic" class="qimg" style="display:none">
 <div class="qopts" id="qoptions"></div>
@@ -171,6 +164,7 @@ h2{color:#e2b714;margin-bottom:20px}
 <div id="qstats" class="scr">
 <div class="card">
 <h2 style="text-align:center">📊 Ваш результат</h2>
+<p style="text-align:center;color:#aaa;margin-bottom:10px" id="sname-display"></p>
 <div class="sgrid">
 <div class="si"><div class="v" id="st">0</div><div class="l">Всего ответов</div></div>
 <div class="si"><div class="v" id="sc">0</div><div class="l">Правильных</div></div>
@@ -187,53 +181,84 @@ h2{color:#e2b714;margin-bottom:20px}
 
 </div>
 <script>
-var DEFAULT_Q = [{"text":"Вопрос 1...","options":["А","Б","В","Г"],"correct":0}];
-function getQ(){try{var d=JSON.parse(localStorage.getItem('qz_data'));if(d&&d.length)return d;localStorage.setItem('qz_data',JSON.stringify(DEFAULT_Q));return DEFAULT_Q}catch(e){return DEFAULT_Q}}
+function getQ(){
+  try{
+    var d=JSON.parse(localStorage.getItem('qz_data'));
+    if(d&&d.length)return d;
+  }catch(e){}
+  return[];
+}
 function setQ(d){localStorage.setItem('qz_data',JSON.stringify(d))}
-function getPw(){return localStorage.getItem('qz_pw')||'severyanin'}
+function getPw(){return localStorage.getItem('qz_pw')||'admin123'}
+
+function tryLoadFromFile(){
+  if(getQ().length>0)return;
+  fetch('questions.json').then(function(r){
+    if(!r.ok)return;
+    return r.json();
+  }).then(function(d){
+    if(d&&Array.isArray(d)&&d.length){
+      setQ(d);
+      location.reload();
+    }
+  }).catch(function(){});
+}
+
 function show(id){document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('on')});document.getElementById(id).classList.add('on')}
-function goHome(){show('home')}
+function goHome(){show('home');updateHomeCount()}
 function goLogin(){show('login');document.getElementById('pw').value='';document.getElementById('lerr').textContent='';document.getElementById('pw').focus()}
 function doLogin(){if(document.getElementById('pw').value===getPw()){show('admin');aTab('alist')}else{document.getElementById('lerr').textContent='Неверный пароль'}}
 function aTab(id){document.querySelectorAll('.atab').forEach(function(t){t.style.display='none'});document.getElementById(id).style.display='block';if(id==='alist')renderList();if(id==='aadd'&&!document.getElementById('eid').value)resetForm()}
 function esc(t){if(!t)return'';var d=document.createElement('div');d.textContent=t;return d.innerHTML}
 
+function updateHomeCount(){
+  var q=getQ();
+  document.getElementById('home-total').textContent=q.length;
+  var ni=document.getElementById('sname');
+  var gb=document.getElementById('gobtn');
+  ni.oninput=function(){gb.disabled=!ni.value.trim()||!q.length};
+  gb.disabled=!ni.value.trim()||!q.length;
+}
+
 function renderList(){
-var q=getQ();document.getElementById('qcnt').textContent=q.length;
-var c=document.getElementById('qlist');
-if(!q.length){c.innerHTML='<div class="empty">📭 Вопросов пока нет. Нажмите «➕ Добавить»!</div>';return}
-var h='';
-for(var i=0;i<q.length;i++){var x=q[i];
-h+='<div class="qi"><div class="meta">#'+(i+1)+(x.category?' · '+esc(x.category):'')+'</div>';
-h+='<h3>'+esc(x.text)+'</h3>';
-if(x.image)h+='<img src="'+esc(x.image)+'">';
-for(var j=0;j<x.options.length;j++)h+='<div class="qo'+(j===x.correct?' ok':'')+'">'+( j===x.correct?'✓ ':'')+esc(x.options[j])+'</div>';
-if(x.explanation)h+='<div style="color:#888;font-size:.85rem;margin-top:8px">💡 '+esc(x.explanation)+'</div>';
-h+='<div class="acts"><button class="btn btn-y btn-s" onclick="editQ('+i+')">✏️</button>';
-h+='<button class="btn btn-r btn-s" onclick="delQ('+i+')">🗑️</button></div></div>';}
-c.innerHTML=h;}
+  var q=getQ();document.getElementById('qcnt').textContent=q.length;
+  var c=document.getElementById('qlist');
+  if(!q.length){c.innerHTML='<div class="empty">📭 Вопросов нет. Нажмите «➕ Добавить»!</div>';return}
+  var h='';
+  for(var i=0;i<q.length;i++){var x=q[i];
+    h+='<div class="qi"><div class="meta">#'+(i+1)+(x.category?' · '+esc(x.category):'')+'</div>';
+    h+='<h3>'+esc(x.text)+'</h3>';
+    if(x.image)h+='<img src="'+esc(x.image)+'">';
+    for(var j=0;j<x.options.length;j++)h+='<div class="qo'+(j===x.correct?' ok':'')+'">'+( j===x.correct?'✓ ':'')+esc(x.options[j])+'</div>';
+    if(x.explanation)h+='<div style="color:#888;font-size:.85rem;margin-top:8px">💡 '+esc(x.explanation)+'</div>';
+    h+='<div class="acts"><button class="btn btn-y btn-s" onclick="editQ('+i+')">✏️</button>';
+    h+='<button class="btn btn-r btn-s" onclick="delQ('+i+')">🗑️</button></div></div>';}
+  c.innerHTML=h;
+}
 
 function resetForm(){
-document.getElementById('ftitle').textContent='➕ Добавить вопрос';
-document.getElementById('eid').value='';
-document.getElementById('ft').value='';
-document.getElementById('fc').value='';
-document.getElementById('fe').value='';
-document.getElementById('fiu').value='';
-document.getElementById('fif').value='';
-document.getElementById('iprev').style.display='none';
-var c=document.getElementById('fopts');c.innerHTML='';
-for(var i=0;i<4;i++)addOpt('',i===0);}
+  document.getElementById('ftitle').textContent='➕ Добавить вопрос';
+  document.getElementById('eid').value='';
+  document.getElementById('ft').value='';
+  document.getElementById('fc').value='';
+  document.getElementById('fe').value='';
+  document.getElementById('fiu').value='';
+  document.getElementById('fif').value='';
+  document.getElementById('iprev').style.display='none';
+  var c=document.getElementById('fopts');c.innerHTML='';
+  for(var i=0;i<4;i++)addOpt('',i===0);
+}
 
 function addOpt(val,chk){
-var c=document.getElementById('fopts'),n=c.children.length;
-var d=document.createElement('div');d.className='orow';
-var r=document.createElement('input');r.type='radio';r.name='cor';r.value=n;if(chk)r.checked=true;
-var t=document.createElement('input');t.type='text';t.placeholder='Вариант '+(n+1);t.value=val||'';t.required=true;
-var b=document.createElement('button');b.type='button';b.className='btn btn-r btn-s';b.textContent='✕';
-b.onclick=function(){if(c.children.length<=2){alert('Минимум 2 варианта!');return}d.remove();
-for(var i=0;i<c.children.length;i++)c.children[i].querySelector('input[type=radio]').value=i;};
-d.appendChild(r);d.appendChild(t);d.appendChild(b);c.appendChild(d);}
+  var c=document.getElementById('fopts'),n=c.children.length;
+  var d=document.createElement('div');d.className='orow';
+  var r=document.createElement('input');r.type='radio';r.name='cor';r.value=n;if(chk)r.checked=true;
+  var t=document.createElement('input');t.type='text';t.placeholder='Вариант '+(n+1);t.value=val||'';t.required=true;
+  var b=document.createElement('button');b.type='button';b.className='btn btn-r btn-s';b.textContent='✕';
+  b.onclick=function(){if(c.children.length<=2){alert('Минимум 2 варианта!');return}d.remove();
+  for(var i=0;i<c.children.length;i++)c.children[i].querySelector('input[type=radio]').value=i;};
+  d.appendChild(r);d.appendChild(t);d.appendChild(b);c.appendChild(d);
+}
 
 function prevImg(){var u=document.getElementById('fiu').value,p=document.getElementById('iprev');
 if(u){p.src=u;p.style.display='block'}else{p.style.display='none'}}
@@ -245,40 +270,42 @@ document.getElementById('iprev').src=e.target.result;
 document.getElementById('iprev').style.display='block'};r.readAsDataURL(f);}
 
 function submitQ(e){e.preventDefault();
-var text=document.getElementById('ft').value.trim();
-var cat=document.getElementById('fc').value.trim();
-var expl=document.getElementById('fe').value.trim();
-var img=document.getElementById('fiu').value.trim();
-var rows=document.querySelectorAll('#fopts .orow'),opts=[];
-for(var i=0;i<rows.length;i++)opts.push(rows[i].querySelector('input[type=text]').value.trim());
-var rd=document.querySelector('input[name=cor]:checked');
-var cor=rd?parseInt(rd.value):0;
-if(!text||opts.some(function(o){return!o})){alert('Заполните текст и все варианты!');return}
-var q=getQ(),eid=document.getElementById('eid').value;
-var item={text:text,options:opts,correct:cor,explanation:expl,image:img,category:cat};
-if(eid!==''){q[parseInt(eid)]=item;alert('Вопрос обновлён!')}
-else{q.push(item);alert('Вопрос добавлен!')}
-setQ(q);cancelEdit();}
+  var text=document.getElementById('ft').value.trim();
+  var cat=document.getElementById('fc').value.trim();
+  var expl=document.getElementById('fe').value.trim();
+  var img=document.getElementById('fiu').value.trim();
+  var rows=document.querySelectorAll('#fopts .orow'),opts=[];
+  for(var i=0;i<rows.length;i++)opts.push(rows[i].querySelector('input[type=text]').value.trim());
+  var rd=document.querySelector('input[name=cor]:checked');
+  var cor=rd?parseInt(rd.value):0;
+  if(!text||opts.some(function(o){return!o})){alert('Заполните текст и все варианты!');return}
+  var q=getQ(),eid=document.getElementById('eid').value;
+  var item={text:text,options:opts,correct:cor,explanation:expl,image:img,category:cat};
+  if(eid!==''){q[parseInt(eid)]=item;alert('Вопрос обновлён!')}
+  else{q.push(item);alert('Вопрос добавлен!')}
+  setQ(q);cancelEdit();
+}
 
 function editQ(i){var q=getQ()[i];
-document.getElementById('ftitle').textContent='✏️ Редактировать';
-document.getElementById('eid').value=i;
-document.getElementById('ft').value=q.text;
-document.getElementById('fc').value=q.category||'';
-document.getElementById('fe').value=q.explanation||'';
-document.getElementById('fiu').value=q.image||'';
-var p=document.getElementById('iprev');
-if(q.image){p.src=q.image;p.style.display='block'}else{p.style.display='none'}
-var c=document.getElementById('fopts');c.innerHTML='';
-for(var j=0;j<q.options.length;j++)addOpt(q.options[j],j===q.correct);
-aTab('aadd');}
+  document.getElementById('ftitle').textContent='✏️ Редактировать';
+  document.getElementById('eid').value=i;
+  document.getElementById('ft').value=q.text;
+  document.getElementById('fc').value=q.category||'';
+  document.getElementById('fe').value=q.explanation||'';
+  document.getElementById('fiu').value=q.image||'';
+  var p=document.getElementById('iprev');
+  if(q.image){p.src=q.image;p.style.display='block'}else{p.style.display='none'}
+  var c=document.getElementById('fopts');c.innerHTML='';
+  for(var j=0;j<q.options.length;j++)addOpt(q.options[j],j===q.correct);
+  aTab('aadd');
+}
 
 function cancelEdit(){resetForm();aTab('alist')}
 function delQ(i){if(!confirm('Удалить вопрос #'+(i+1)+'?'))return;var q=getQ();q.splice(i,1);setQ(q);renderList()}
 
 function doExport(){var q=getQ();if(!q.length){alert('Нет вопросов!');return}
 var b=new Blob([JSON.stringify(q,null,2)],{type:'application/json'});
-var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='вопросы.json';a.click()}
+var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='questions.json';a.click()}
 
 function doImport(e){var f=e.target.files[0];if(!f)return;
 var r=new FileReader();r.onload=function(ev){try{
@@ -287,55 +314,62 @@ var q=getQ(),n=0;for(var i=0;i<d.length;i++){if(d[i].text&&d[i].options&&typeof 
 setQ(q);alert('Загружено: '+n+' вопросов');renderList();}catch(err){alert('Ошибка: '+err.message)}};
 r.readAsText(f);e.target.value='';}
 
-function doClear(){if(!confirm('Удалить ВСЕ вопросы? Это нельзя отменить!'))return;setQ([]);renderList();alert('Все вопросы удалены.')}
+function doClear(){if(!confirm('Удалить ВСЕ вопросы?'))return;setQ([]);renderList();alert('Удалено.')}
 
-var shuf=[],ci=0,ta=0,cc=0,t0=null,tp=0,ans=false;
-
-function goQuizStart(){var q=getQ();
-document.getElementById('qtot').textContent=q.length?q.length:'0 — добавьте вопросы в админке!';
-var ni=document.getElementById('sname'),gb=document.getElementById('gobtn');
-ni.value='';gb.disabled=true;
-ni.oninput=function(){gb.disabled=!ni.value.trim()||!q.length};
-show('qstart')}
+var shuf=[],ci=0,ta=0,cc=0,t0=null,tp=0,ans=false,sn='';
 
 function shuffle(a){var r=a.slice();for(var i=r.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=r[i];r[i]=r[j];r[j]=t}return r}
 
-function beginQuiz(){if(!document.getElementById('sname').value.trim())return;
-shuf=shuffle(getQ());ci=0;ta=0;cc=0;tp=0;t0=Date.now();show('qplay');renderQ()}
+function beginQuiz(){
+  sn=document.getElementById('sname').value.trim();
+  if(!sn||!getQ().length)return;
+  shuf=shuffle(getQ());ci=0;ta=0;cc=0;tp=0;t0=Date.now();ans=false;
+  show('qplay');renderQ();
+}
 
-function renderQ(){if(ci>=shuf.length){shuf=shuffle(getQ());ci=0}
-ans=false;var q=shuf[ci];
-document.getElementById('qcounter').textContent='Вопрос '+(ta+1)+' · В базе: '+getQ().length;
-document.getElementById('qtxt').textContent=q.text;
-var img=document.getElementById('qpic');
-if(q.image){img.src=q.image;img.style.display='block'}else{img.style.display='none'}
-var od=document.getElementById('qoptions');od.innerHTML='';
-for(var i=0;i<q.options.length;i++){(function(idx){
-var b=document.createElement('button');b.className='qbtn';b.textContent=q.options[idx];
-b.onclick=function(){pickAns(idx)};od.appendChild(b)})(i)}
-document.getElementById('qfb').className='fb';
-document.getElementById('qfb').textContent='';
-document.getElementById('nbtn').style.display='none';
-document.getElementById('pfill').style.width=(ta/getQ().length*100)%100+'%'}
+function renderQ(){
+  if(ci>=shuf.length){shuf=shuffle(getQ());ci=0;}
+  ans=false;var q=shuf[ci];
+  document.getElementById('qcounter').textContent='Вопрос '+(ta+1)+' · В базе: '+getQ().length;
+  document.getElementById('qtxt').textContent=q.text;
+  var catEl=document.getElementById('qcat');
+  if(q.category){catEl.textContent=q.category;catEl.style.display='inline-block'}else{catEl.style.display='none'}
+  var img=document.getElementById('qpic');
+  if(q.image&&q.image!==''&&q.image.indexOf('ДОБАВЬ')===-1){img.src=q.image;img.style.display='block'}else{img.style.display='none'}
+  var od=document.getElementById('qoptions');od.innerHTML='';
+  for(var i=0;i<q.options.length;i++){(function(idx){
+    var b=document.createElement('button');b.className='qbtn';b.textContent=q.options[idx];
+    b.onclick=function(){pickAns(idx)};od.appendChild(b)})(i)}
+  document.getElementById('qfb').className='fb';
+  document.getElementById('qfb').textContent='';
+  document.getElementById('nbtn').style.display='none';
+  document.getElementById('pfill').style.width=(ta/getQ().length*100)%100+'%';
+}
 
-function pickAns(idx){if(ans)return;ans=true;ta++;
-var q=shuf[ci],btns=document.querySelectorAll('.qbtn'),fb=document.getElementById('qfb');
-for(var i=0;i<btns.length;i++){btns[i].classList.add('dis');
-if(i===q.correct)btns[i].classList.add('yes');
-if(i===idx&&idx!==q.correct)btns[i].classList.add('no')}
-if(idx===q.correct){cc++;fb.className='fb fbok show';fb.textContent='✅ Верно!'+(q.explanation?' '+q.explanation:'')}
-else{fb.className='fb fbno show';fb.textContent='❌ Неверно.'+(q.explanation?' '+q.explanation:'')}
-document.getElementById('nbtn').style.display='inline-block'}
+function pickAns(idx){
+  if(ans)return;ans=true;ta++;
+  var q=shuf[ci],btns=document.querySelectorAll('.qbtn'),fb=document.getElementById('qfb');
+  for(var i=0;i<btns.length;i++){btns[i].classList.add('dis');
+    if(i===q.correct)btns[i].classList.add('yes');
+    if(i===idx&&idx!==q.correct)btns[i].classList.add('no')}
+  if(idx===q.correct){cc++;fb.className='fb fbok show';fb.textContent='✅ Верно!'+(q.explanation?' '+q.explanation:'')}
+  else{fb.className='fb fbno show';fb.textContent='❌ Неверно.'+(q.explanation?' '+q.explanation:'')}
+  document.getElementById('nbtn').style.display='inline-block';
+}
 
 function nextQuestion(){ci++;renderQ()}
 function getTime(){var ms=tp;if(t0)ms+=Date.now()-t0;var s=Math.floor(ms/1000),m=Math.floor(s/60);s=s%60;return(m<10?'0':'')+m+':'+(s<10?'0':'')+s}
 function showStats(){if(t0){tp+=Date.now()-t0;t0=null}
-document.getElementById('st').textContent=ta;
-document.getElementById('sc').textContent=cc;
-document.getElementById('sp').textContent=ta?Math.round(cc/ta*100)+'%':'0%';
-document.getElementById('stm').textContent=getTime();show('qstats')}
+  document.getElementById('sname-display').textContent=sn;
+  document.getElementById('st').textContent=ta;
+  document.getElementById('sc').textContent=cc;
+  document.getElementById('sp').textContent=ta?Math.round(cc/ta*100)+'%':'0%';
+  document.getElementById('stm').textContent=getTime();show('qstats')}
 function resumeQuiz(){t0=Date.now();show('qplay')}
-function restartQuiz(){goQuizStart()}
+function restartQuiz(){show('home');document.getElementById('sname').value='';document.getElementById('gobtn').disabled=true}
+
+updateHomeCount();
+tryLoadFromFile();
 </script>
 </body>
 </html>
